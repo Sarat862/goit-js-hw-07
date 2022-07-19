@@ -25,18 +25,21 @@ galleryEl.addEventListener('click', onGalleryClick);
 function onGalleryClick(event) {
   event.preventDefault();
   
-  if (event.target.classList.contains("gallery__image")) {
+  if (event.target.nodeName === "IMG") {
+
     const instance = basicLightbox.create(`
     <img src="${event.target.dataset.source}" width="800" height="600">
-    `)
+    `, {
+      onShow: (instance) => window.addEventListener('keydown', onEscKeydown),
+      onClose: (instance) => window.removeEventListener('keydown', onEscKeydown),
+    });
+    
     instance.show()
-
-    window.addEventListener('keydown', onEscKeydown);
+    
     function onEscKeydown(event) {
       if (event.code === 'Escape') {
         instance.close();
-        window.removeEventListener('keydown', onEscKeydown)
-      }
+      } 
     }
   }
 }
